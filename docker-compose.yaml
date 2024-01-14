@@ -1,0 +1,86 @@
+services:
+  # audit-service
+  audit-service:
+    container_name: audit-service
+    build:
+      context: ./rent-audit-service
+    ports:
+      - 8081:80
+    networks:
+      - rent-network
+    depends_on:
+      - audit-database
+  # audit-db
+  audit-database:
+    container_name: audit-database
+    image: postgres:alpine3.18
+    volumes:
+      - audit-db-data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_DB: audit
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - rent-network
+  # user-service
+  user-service:
+    container_name: user-service
+    build:
+      context: ./rent-config-service
+    ports:
+      - 8080:80
+    networks:
+      - rent-network
+    depends_on:
+      - user-database
+  # user-db
+  user-database:
+    container_name: user-database
+    image: postgres:alpine3.18
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - rent-network
+  # flat-service
+  flats-service:
+    container_name: flats-service
+    build:
+      context: ./rent-flats-service
+    ports:
+      - 8082:80
+    networks:
+      - rent-network
+    depends_on:
+      - flats-database
+  # flat-db
+  flats-database:
+    container_name: flats-database
+    image: postgres:alpine3.18
+    volumes:
+      - flats-db-data:/var/lib/postgresql/data
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_DB: flat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - rent-network
+
+networks:
+  rent-network:
+    name: rent-network
+
+volumes:
+  flats-db-data:
+  user-db-data:
+  audit-db-data:
+
