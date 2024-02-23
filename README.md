@@ -1,5 +1,5 @@
 # Realty Search System
-See [repositories-clone.sh](repositories-clone.sh) file
+See [repositories-clone.sh](repositories-clone.sh) file to find microservices
 * rent-config-service
 * rent-flats-service
 * rent-audit-service (SQL)
